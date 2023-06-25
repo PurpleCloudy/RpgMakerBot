@@ -1,7 +1,7 @@
 from character import Character
 
 class Shaman(Character):
-    def __init__(self):
+    def __init__(self) -> None:
         self.characteristics = {
             'max_health':90,
             'health':90,
@@ -9,6 +9,13 @@ class Shaman(Character):
             'exp':0,
             'lvl':1,
             'crit_chance':5,
-            'def_chance':15,
+            'def_chance':40,
             'coefficent':0.1,
         }
+    
+    def flora_shield(self) -> int:
+        self.characteristics['def_chance'] += 30
+        return self.characteristics['def_chance']
+    
+    def __del__(self) -> str:
+        return 'Твой жизненный путь завершен'
