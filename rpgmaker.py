@@ -12,14 +12,19 @@ bot = TeleBot(API_TOKEN)
 is_battle = False
 
 CHARACTERS = {
-    'шаман':Shaman,
-    'друид':Druid, 
-    'охотник':Hunter, 
-    'маг':Mage,
+    'Шаман':Shaman,
+    'Друид':Druid, 
+    'Охотник':Hunter, 
+    'Маг':Mage,
     }
 
-def handler_filter(filter_obj:dict, message:types.Message) -> bool:
-    for name in filter.
+def handler_filter(message:types.Message, filter_obj:dict) -> bool:
+    for name in filter_obj.keys():
+        if name == message.text:
+            return True
+    return False
+        
+
         
 def init_village_markup(char):
     village_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -47,7 +52,6 @@ def battle_markup():
 
 
 if __name__ == '__main__':
-    print(list(CHARACTERS.keys()))
 
     @bot.message_handler(commands=['start'])
     def start(message:types.Message):
@@ -59,7 +63,7 @@ if __name__ == '__main__':
 )
 
 
-    @bot.message_handler(text_contains=list(CHARACTERS.keys()))
+    @bot.message_handler(func=handler_filter(filter_obj=CHARACTERS))
     def choose_class(message:types.Message):
         if not is_battle:
             bot.send_message(chat_id=message.chat.id, text=f'Твой выбор: {message.text}', reply_markup=init_village_markup())
