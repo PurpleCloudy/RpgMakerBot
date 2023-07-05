@@ -11,6 +11,11 @@ class Druid(Character):
             'crit_chance':7,
             'def_chance':30,
             'coefficent':0.1,
+            'cool down':3,
+        }
+
+        self.abilities = {
+            'Вызов духов':self.spirit_calling,
         }
 
     def spirit_calling(self):

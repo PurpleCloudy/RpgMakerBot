@@ -11,6 +11,11 @@ class Hunter(Character):
             'crit_chance':10,
             'def_chance':50,
             'coefficent':0.1,
+            'cool down':3,
+        }
+
+        self.abilities = {
+            'Увертливость':self.dash,
         }
 
     def dash(self):

@@ -1,5 +1,4 @@
 from telebot import TeleBot, types
-from random import randint
 from shaman import Shaman
 from mage import Mage
 from druid import Druid
@@ -44,12 +43,12 @@ def change_class_markup():
     change_class_markup.add(button_shaman, button_druid, button_hunter, button_mage)
     return change_class_markup
     
-def battle_markup(character:Shaman|Hunter|Druid|Mage):
+def battle_markup():
     battle_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    
-    attack = types.KeyboardButton()
-    defend = types.KeyboardButton()
-    battle_markup.add(attack, defend)
+    ability = types.KeyboardButton('Способность')
+    attack = types.KeyboardButton('Атаковать')
+    defend = types.KeyboardButton('Защищаться')
+    battle_markup.add(attack, defend, ability)
     return battle_markup
 
 
@@ -63,7 +62,9 @@ if __name__ == '__main__':
         '''Добро пожаловать в наш мир путник. Здесь тебя ждут приключения, опасности и огромная сила. Удачи!''', 
         reply_markup = change_class_markup()
 )
-
+    @bot.message_handler(func=lambda menu: True if menu.text == 'Смена класса' else False)
+    def transfer_to_choosing(message:types.Message):
+        start(message)
 
     @bot.message_handler(func=handler_filter)
     def choose_class(message:types.Message):
@@ -82,15 +83,43 @@ if __name__ == '__main__':
             else:
                 bot.send_message(chat_id=message.chat.id, text='У тебя пока недостаточно опыта')
         
-    @bot.message_handler(func=lambda menu: True if menu.text == 'Защищать деревню!' else False)
-    def battle():
+    @bot.message_handler(func=lambda menu: True if menu.text == 'Отправиться на охоту за монстрами' else False)
+    def battle(message:types.Message):
+        global is_battle
+        is_battle = True
+        global monster
         monster = Character(character.characteristics['lvl']+2)
+        bot.send_message(
+            chat_id=message.chat.id, 
+            text=f'''
+                Из-за угла выскакивает готовое к бою чудовище, судя по его виду ты можешь определить, что его: 
+                сила ~ {monster.characteristics['power']}, а живучесть ~ {monster.characteristics['max_health']}
+                Приготовься к бою!
+                        ''', reply_markup=battle_markup())
         
-bot.infinity_polling()
-    
-            
-    
-    
-            
-    
+    @bot.message_handler(func=lambda menu: True if menu.text == 'Атаковать' else False)
+    def attack(message:types.Message):
+        results = character.attack(monster.characteristics['health'])
+        monster.characteristics['health'] = results['hp']
+        if monster.characteristics['health'] > 0:
+            if results['is_crit']:
+                bot.send_message(chat_id = message.chat.id, text = f'Умелый удар попадает в уязвимое место чудовища! У него остается всего {monster.characteristics["health"]} жизней!')
+            else:
+                bot.send_message(chat_id = message.chat.id, text = f'Отличный удар! У чудовища остается всего {monster.characteristics["health"]} жизней!')
+        else:
+            character.characteristics['exp'] += monster.characteristics["lvl"]*15
+            bot.send_message(chat_id = message.chat.id, text = f'Размашистый удар раскалывает череп чудовища. {monster.__del__()}', reply_markup=init_village_markup())
+            bot.send_message(chat_id=message.chat.id, text = f'Ты получил {monster.characteristics["lvl"]*15} опыта')
 
+    @bot.message_handler(func=lambda menu: True if menu.text == 'Защищаться' else False)
+    def defence(message:types.Message):
+        results = character.defence(monster.characteristics['power'])
+        character.characteristics['health'] = results['hp']
+        if results['is_crit']:
+            bot.send_message(chat_id = message.chat.id, text = f'Уворот оказывается успешным и благодаря выигранному времени ты заходишь за спину противника!У тебя остается {character.characteristics["health"]} жизней и инициатива на твоей стороне, пока монстр пытается вытащить оружие!')
+        else:
+            bot.send_message(chat_id = message.chat.id, text = f'Уворот оказывается неудачным! У тебя остается {character.characteristics["health"]} жизней!')
+
+
+
+bot.infinity_polling()

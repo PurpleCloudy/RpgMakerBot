@@ -13,20 +13,24 @@ class Character():
             'coefficent':0.1,
             'initiative':False,
         }
+        
+        self.abilities = {
+
+        }
 
     def attack(self, mob_hp:int) -> int:
         if randint(1, 100) <= self.characteristics['crit_chance'] or (randint(1, 50) <= self.characteristics['crit_chance'] and self.characteristics['initiative']):
             self.characteristics['initiative'] = False
-            return mob_hp - self.power*2
+            return {'hp':mob_hp - self.characteristics['power']*2, 'is_crit':True}
         else:
-            return mob_hp - self.power
+            return {'hp':mob_hp - self.characteristics['power'], 'is_crit':False}
     
     def defence(self, mob_power:int) -> int:
         if randint(1, 100) <= self.characteristics['def_chance']:
             self.characteristics['initiative'] = True
-            return self.characteristics['health']
+            return {'hp':self.characteristics['health'], 'is_crit':True}
         else:
-            return self.characteristics['health'] - mob_power
+            return {'hp':self.characteristics['health'] - mob_power, 'is_crit':False}
         
     def level_up(self) -> str:
         if self.characteristics['lvl'] < 25:
