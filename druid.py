@@ -14,15 +14,18 @@ class Druid(Character):
             'def_chance': 30,
             'coefficent': 0.1,
             'cool down': 3,
+            'initiative': False,
         }
 
         self.abilities = {
             'Вызов духов': self.spirit_calling,
         }
 
-    def spirit_calling(self):
-        self.characteristics['power'] += 20
-        return self.characteristics['power']
+    def spirit_calling(self, switcher:bool) -> None:
+        if switcher:
+            self.characteristics['power'] += 20
+        else:
+            self.characteristics['power'] -= 20
     
     def __del__(self) -> str:
         return 'Твой жизненный путь завершен'

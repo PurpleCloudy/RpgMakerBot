@@ -14,15 +14,18 @@ class Hunter(Character):
             'def_chance': 50,
             'coefficent': 0.1,
             'cool down': 3,
+            'initiative': False,
         }
 
         self.abilities = {
             'Увертливость': self.dash,
         }
 
-    def dash(self):
-        self.characteristics['def_chance'] += 20
-        return self.characteristics['def_chance']
-    
+    def dash(self, switcher:bool) -> None:
+        if switcher:
+            self.characteristics['def_chance'] += 20
+        else:
+            self.characteristics['def_chance'] -= 20
+            
     def __del__(self) -> str:
         return 'Твой жизненный путь завершен'
