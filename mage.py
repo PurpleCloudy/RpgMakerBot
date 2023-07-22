@@ -15,18 +15,22 @@ class Mage(Character):
             'def_chance': 20,
             'coefficent': 0.1,
             'cool down': 3,
-            "initiative": False,
+            'initiative': False,
         }
 
         self.abilities = {
             'Огненный шар': self.fireball,
         }
 
-    def fireball(self) -> int | None:
-        if randint(1, 100) <= self.characteristics['crit_chance']*2:
-            return self.characteristics['power']*3
+    def fireball(self, switcher:bool) -> None|bool:
+        if switcher:
+            if randint(1, 100) <= self.characteristics['crit_chance']*2:
+                self.characteristics['power']*=3
+                return True
+            else:
+                return False
         else:
-            return None
+            self.characteristics['power']//=3
         
     def __del__(self) -> str:
         return 'Твой жизненный путь завершен'

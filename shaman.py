@@ -14,15 +14,18 @@ class Shaman(Character):
             'def_chance': 40,
             'coefficent': 0.1,
             'cool down': 3,
+            'initiative': False,
         }
     
         self.abilities = {
             'Щит природы': self.flora_shield,
         }
 
-    def flora_shield(self) -> int:
-        self.characteristics['def_chance'] += 30
-        return self.characteristics['def_chance']
+    def flora_shield(self, switcher) -> None:
+        if switcher:
+            self.characteristics['def_chance'] += 30
+        else:
+            self.characteristics['def_chance'] -= 30
     
     def __del__(self) -> str:
         return 'Твой жизненный путь завершен'
