@@ -1,9 +1,31 @@
+"""
+Модуль класса Друид для RPG-игры.
+
+Содержит реализацию класса Druid, наследуемого от базового класса Character,
+с уникальными характеристиками и способностью 'Вызов духов'.
+"""
+
 from character import Character
 from typing import Dict, Any
 
 
 class Druid(Character):
+    """
+    Класс, представляющий персонажа класса Друид.
+
+    Наследуется от базового класса Character и определяет начальные
+    характеристики и уникальные способности друида.
+    """
+
     def __init__(self, name: str = "Druid") -> None:
+        """
+        Инициализирует экземпляр класса Druid.
+
+        Устанавливает начальные характеристики и доступные способности.
+
+        Args:
+            name (str): Имя персонажа. По умолчанию 'Druid'.
+        """
         super().__init__(name, lvl=2)
         self.characteristics.update({
             'max_health': 70,
@@ -23,6 +45,14 @@ class Druid(Character):
         }
 
     def spirit_calling(self, switcher: bool) -> None:
+        """
+        Переключает активность способности 'Вызов духов'.
+
+        При активации увеличивает силу на 20, при деактивации - уменьшает.
+
+        Args:
+            switcher (bool): Если True, активирует способность, иначе деактивирует.
+        """
         try:
             if switcher:
                 self.characteristics['power'] += 20
@@ -32,10 +62,25 @@ class Druid(Character):
             print(f"Ошибка при использовании способности 'Вызов духов': {e}")
 
     def __del__(self) -> str:
+        """
+        Возвращает строку при удалении экземпляра класса.
+
+        Returns:
+            str: Сообщение о завершении жизненного пути персонажа.
+        """
         return 'Твой жизненный путь завершен'
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Druid':
+        """
+        Создает экземпляр класса Druid из словаря данных.
+
+        Args:
+            data (Dict[str, Any]): Словарь с данными персонажа.
+
+        Returns:
+            Druid: Экземпляр класса Druid.
+        """
         instance = cls.__new__(cls)
         instance.name = data.get('name', 'Druid')
         instance.characteristics = data.get('characteristics', {})

@@ -1,9 +1,31 @@
+"""
+Модуль класса Охотник для RPG-игры.
+
+Содержит реализацию класса Hunter, наследуемого от базового класса Character,
+с уникальными характеристиками и способностью 'Увертливость'.
+"""
+
 from character import Character
 from typing import Dict, Any
 
 
 class Hunter(Character):
+    """
+    Класс, представляющий персонажа класса Охотник.
+
+    Наследуется от базового класса Character и определяет начальные
+    характеристики и уникальные способности охотника.
+    """
+
     def __init__(self, name: str = "Hunter") -> None:
+        """
+        Инициализирует экземпляр класса Hunter.
+
+        Устанавливает начальные характеристики и доступные способности.
+
+        Args:
+            name (str): Имя персонажа. По умолчанию 'Hunter'.
+        """
         super().__init__(name, lvl=1)
         self.characteristics.update({
             'max_health': 50,
@@ -23,6 +45,14 @@ class Hunter(Character):
         }
 
     def dash(self, switcher: bool) -> None:
+        """
+        Переключает активность способности 'Увертливость'.
+
+        При активации увеличивает шанс уклонения на 20, при деактивации - уменьшает.
+
+        Args:
+            switcher (bool): Если True, активирует способность, иначе деактивирует.
+        """
         try:
             if switcher:
                 self.characteristics['def_chance'] += 20
@@ -32,10 +62,25 @@ class Hunter(Character):
             print(f"Ошибка при использовании способности 'Увертливость': {e}")
 
     def __del__(self) -> str:
+        """
+        Возвращает строку при удалении экземпляра класса.
+
+        Returns:
+            str: Сообщение о завершении жизненного пути персонажа.
+        """
         return 'Твой жизненный путь завершен'
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Hunter':
+    def from_dict(cls,  data: Dict[str, Any]) -> 'Hunter':
+        """
+        Создает экземпляр класса Hunter из словаря данных.
+
+        Args:
+            data (Dict[str, Any]): Словарь с данными персонажа.
+
+        Returns:
+            Hunter: Экземпляр класса Hunter.
+        """
         instance = cls.__new__(cls)
         instance.name = data.get('name', 'Hunter')
         instance.characteristics = data.get('characteristics', {})
