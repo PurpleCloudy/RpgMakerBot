@@ -16,7 +16,6 @@ from mage import Mage
 from druid import Druid
 from hunter import Hunter
 
-
 CHARACTER_TYPES = {
     'Shaman': Shaman,
     'Mage': Mage,
@@ -44,7 +43,7 @@ class DataSerializer(ABC):
         pass
 
     @abstractmethod
-    def deserialize(self, data: str) -> Character:
+    def deserialize(self, str) -> Character:
         """
         Десериализует строку в объект персонажа.
 
