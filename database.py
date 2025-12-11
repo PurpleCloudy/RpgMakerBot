@@ -25,3 +25,5 @@ class KillsSaver(Base):
     def __repr__(self):
         return f'id {self.id}; player_id {self.player_id}; time {self.time}; type {self.mob_type}'
 
+
+Base.metadata.create_all(bind=engine)
