@@ -35,7 +35,7 @@ from dotenv import load_dotenv
 import os
 import re
 from datetime import datetime, timedelta
-from db_utils import save_kill
+from db_utils import save_kill, kills_to_table, get_kills
 
 load_dotenv()
 
@@ -224,6 +224,17 @@ def main():
             )
         except Exception as e:
             print(f"Ошибка при отправке сообщения: {e}")
+
+    @bot.message_handler(commands=['stats'])
+    def send_stats(message):
+        print(1)
+        try:
+            df = get_kills()
+            img_bytes = kills_to_table(df)
+            bot.send_photo(message.chat.id, img_bytes, caption="Статистика убийств монстров")
+        except Exception as e:
+            bot.reply_to(message, "Ошибка при генерации статистики")
+            print(f"Stats error: {e}")
 
     @bot.message_handler(func=lambda menu: True if menu.text == 'Смена класса' else False)
     def transfer_to_choosing(message: types.Message):
