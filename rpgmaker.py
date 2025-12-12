@@ -35,6 +35,7 @@ from dotenv import load_dotenv
 import os
 import re
 from datetime import datetime, timedelta
+from db_utils import save_kill
 
 load_dotenv()
 
@@ -430,6 +431,11 @@ def main():
                     exp_gained = monster.exp_reward
                 else:
                     exp_gained = monster.characteristics["lvl"] * 15
+
+                if monster.name == 'Ancient Guardian':
+                    save_kill(player_id=message.from_user.id, mob_type='event')
+                else:
+                    save_kill(player_id=message.from_user.id, mob_type='simple')
 
                 character.gain_exp(exp_gained)
                 bot.send_message(
